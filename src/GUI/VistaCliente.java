@@ -1,6 +1,5 @@
 package GUI;
 
-import javax.swing.plaf.metal.MetalLookAndFeel;
 import data.UsuarioData;
 import java.net.*;
 import java.io.*;
@@ -23,11 +22,6 @@ public class VistaCliente extends javax.swing.JFrame {
      * Creates new form VistaCliente
      */
     public VistaCliente() {
-        try {
-            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         initComponents();
         login = new Login();
         //String b = "Bienvenido ";
@@ -38,8 +32,10 @@ public class VistaCliente extends javax.swing.JFrame {
         } catch (UnknownHostException ex) {
             Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
+
         txtIp.setText(ip.getHostAddress());
         modelo = UsuarioData.llenarArchivos(login.nombre);
+
         jList1.setModel(modelo);
 
     }
@@ -307,8 +303,10 @@ public class VistaCliente extends javax.swing.JFrame {
         EjemplosVarios varios = new EjemplosVarios();
         try {
             varios.enviarEjemplos(login.nombre);
+
         } catch (IOException ex) {
-            Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(VistaCliente.class
+                    .getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
 
