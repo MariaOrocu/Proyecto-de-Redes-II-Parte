@@ -17,7 +17,7 @@ public class FTPServer {
         //data.copiarAchivos("Antonio", "", "");
         EjemplosVarios varios = new EjemplosVarios();
         //String guarda = varios.cifrar("Key", "1234");
-        //System.out.println("encriptado texto:" + varios.cifrar("Key", "1234") + ",fin");
+        //System.out.println("encriptado texto:" + varios.cifrar("Key", "juan12") + ",fin");
         //System.out.println("desencriptado texto: " + varios.descifrar("Key", guarda));
         //varios.enviarEjemplos("Antonio");
         //varios.recibirAhi();
