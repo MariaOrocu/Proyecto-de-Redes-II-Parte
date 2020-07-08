@@ -73,8 +73,8 @@ public class ServerThread implements Runnable {
                     String dirPath = "c:\\Users\\jcast\\Documents\\";
                     String nombre = dis.readUTF();
                     int filesCount = dis.readInt();
-                    dirPath += nombre;
-                    File directorio = new File(dirPath + "\\");
+                    dirPath += nombre + "\\";
+                    File directorio = new File(dirPath);
                     directorio.mkdir();
                     File[] files = new File[filesCount];
 

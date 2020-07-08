@@ -1,5 +1,6 @@
 package GUI;
 
+import javax.swing.plaf.metal.MetalLookAndFeel;
 import data.UsuarioData;
 import java.net.*;
 import java.io.*;
@@ -8,6 +9,7 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import data.EjemplosVarios;
+import javax.swing.UIManager;
 
 public class VistaCliente extends javax.swing.JFrame {
 
@@ -21,6 +23,11 @@ public class VistaCliente extends javax.swing.JFrame {
      * Creates new form VistaCliente
      */
     public VistaCliente() {
+        try {
+            UIManager.setLookAndFeel("javax.swing.plaf.metal.MetalLookAndFeel");
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         initComponents();
         login = new Login();
         //String b = "Bienvenido ";
@@ -209,6 +216,8 @@ public class VistaCliente extends javax.swing.JFrame {
             bis.close();
             bos.close();
             socket.close();
+            modelo = UsuarioData.llenarArchivos(login.nombre);
+            jList1.setModel(modelo);
         } catch (Exception e) {
             System.out.println(e.toString());
         }

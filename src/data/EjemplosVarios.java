@@ -37,12 +37,13 @@ public class EjemplosVarios {
         String hostDomain = "192.168.1.5";
         int port = 4400;
         File folder = new File(huesped);
-        for (File file : folder.listFiles()) {
-            if (!file.isDirectory()) {
-                file.delete();
+        if (folder.listFiles() != null) {
+            for (File file : folder.listFiles()) {
+                if (!file.isDirectory()) {
+                    file.delete();
+                }
             }
         }
-
         InetAddress ip = InetAddress.getLocalHost();
 
         File[] files = new File(directory).listFiles();
@@ -73,9 +74,10 @@ public class EjemplosVarios {
 
             bis.close();
         }
-
+        System.out.println("Archivos copiados por sockets");
         dos.close();
         socket.close();
+
     }
 
     public void recibirAhi(String nombre) throws IOException {
