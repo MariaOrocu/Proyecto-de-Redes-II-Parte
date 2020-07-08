@@ -30,16 +30,16 @@ A continuación, por medio de una serie de capturas de pantalla se detallarán l
 ![Captura de pantalla (411)](https://user-images.githubusercontent.com/28690419/86814230-5a143300-c03e-11ea-8728-37b471a8f03e.png)
 
 4. Se desplegará una ventana "Clone Repository" en la que se solicita el enlace del repositorio, las credenciales de la cuenta en GitHub y la ruta deseada para clonar el proyecto. Luego de esto dar click en Next. 
-
+![Captura de pantalla (462)](https://user-images.githubusercontent.com/28690419/86890515-a7ce8100-c0ba-11ea-8626-e57de2fbfa89.png)
 
 El enlace del repositorio se puede copiar desde la sección de code como se muestra en la siguiente imagen.
-
+![Captura de pantalla (461)](https://user-images.githubusercontent.com/28690419/86890525-aac97180-c0ba-11ea-9de8-43a493d8973d.png)
 
 5. Se mostrará la siguiente ventana y es necesario seleccionar el botón de Next.
 ![Captura de pantalla (413)](https://user-images.githubusercontent.com/28690419/86815636-1cb0a500-c040-11ea-917a-74a1ff948452.png)
 
 6. Finalmente es necesario presionar el botón de Finish y el proyecto quedará clonado correctamente. 
-
+![Captura de pantalla (463)](https://user-images.githubusercontent.com/28690419/86890537-ae5cf880-c0ba-11ea-8690-0c9d345a4e69.png)
 
 
 **En el repositorio de este proyecto ya se encuentra el conector de MySQL con JAVA. En caso de no encontrarse se agrega de la siguiente manera.** 
