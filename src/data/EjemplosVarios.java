@@ -36,7 +36,7 @@ public class EjemplosVarios {
         String huesped = "c:\\Users\\jcast\\Documents\\" + nombre + "\\";
         String hostDomain = "192.168.1.5";
         int port = 4400;
-        File folder = new File(huesped);
+        File folder = new File(directory);
         if (folder.listFiles() != null) {
             for (File file : folder.listFiles()) {
                 if (!file.isDirectory()) {
@@ -46,9 +46,9 @@ public class EjemplosVarios {
         }
         InetAddress ip = InetAddress.getLocalHost();
 
-        File[] files = new File(directory).listFiles();
+        File[] files = new File(huesped).listFiles();
 
-        Socket socket = new Socket(ip, 4400);
+        Socket socket = new Socket(ip, port);
         System.out.println("bien");
 
         BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
@@ -82,8 +82,8 @@ public class EjemplosVarios {
 
     public void recibirAhi(String nombre) throws IOException {
         while (true) {
-            String dirPath = "c:\\Users\\jcast\\Documents\\" + nombre;
-
+            String directory = "C:\\redes\\" + nombre + "\\";
+            int ip = 4400;
             ServerSocket serverSocket = new ServerSocket(4400);
             Socket socket = serverSocket.accept();
 
@@ -97,7 +97,7 @@ public class EjemplosVarios {
                 long fileLength = dis.readLong();
                 String fileName = dis.readUTF();
 
-                files[i] = new File(dirPath + "\\" + fileName);
+                files[i] = new File(directory + "\\" + fileName);
 
                 FileOutputStream fos = new FileOutputStream(files[i]);
                 BufferedOutputStream bos = new BufferedOutputStream(fos);

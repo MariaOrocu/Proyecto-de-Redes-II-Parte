@@ -8,21 +8,27 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import data.EjemplosVarios;
-import javax.swing.UIManager;
+import java.security.Principal;
+import server.Server;
 
-public class VistaCliente extends javax.swing.JFrame {
+public class VistaCliente extends javax.swing.JFrame implements Runnable {
 
     String b = "Bienvenido ";
     String r = "Ruta asignada: C:/redes/";
     Login login;
     InetAddress ip;
     DefaultListModel modelo;
+    boolean seguirHilo = false;
+    boolean hiloIniciado = false;
+    Thread hilo;
+    int cont = 0;
 
     /**
      * Creates new form VistaCliente
      */
     public VistaCliente() {
         initComponents();
+
         login = new Login();
         //String b = "Bienvenido ";
         lblBienvenido.setText(b + login.nombre);
@@ -35,9 +41,7 @@ public class VistaCliente extends javax.swing.JFrame {
 
         txtIp.setText(ip.getHostAddress());
         modelo = UsuarioData.llenarArchivos(login.nombre);
-
         jList1.setModel(modelo);
-
     }
 
     /**
@@ -60,6 +64,7 @@ public class VistaCliente extends javax.swing.JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         jList1 = new javax.swing.JList<>();
         btnActualizar = new javax.swing.JButton();
+        btnParar = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -101,6 +106,13 @@ public class VistaCliente extends javax.swing.JFrame {
             }
         });
 
+        btnParar.setText("Salir");
+        btnParar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPararActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -110,29 +122,35 @@ public class VistaCliente extends javax.swing.JFrame {
                 .addComponent(btnSubir)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addGap(31, 31, 31)
-                        .addComponent(lblRuta, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(btnServidor))
-                    .addGroup(layout.createSequentialGroup()
                         .addGap(56, 56, 56)
                         .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(71, 71, 71)
-                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 181, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(31, 31, 31)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(btnActualizar)
+                            .addComponent(lblRuta, javax.swing.GroupLayout.PREFERRED_SIZE, 213, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(btnServidor))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(54, 54, 54)
+                                .addComponent(btnParar)))))
                 .addGap(72, 72, 72))
             .addGroup(layout.createSequentialGroup()
-                .addGap(126, 126, 126)
-                .addComponent(btnV)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnActualizar)
-                .addGap(149, 149, 149))
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(txtIp, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(lblBienvenido)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(126, 126, 126)
+                        .addComponent(btnV))
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(txtIp, javax.swing.GroupLayout.PREFERRED_SIZE, 132, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(lblBienvenido)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -153,15 +171,12 @@ public class VistaCliente extends javax.swing.JFrame {
                     .addComponent(btnSubir)
                     .addComponent(btnServidor)
                     .addComponent(lblRuta, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
-                        .addComponent(btnV)
-                        .addGap(66, 66, 66))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(64, 64, 64)
-                        .addComponent(btnActualizar)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 73, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnV)
+                    .addComponent(btnActualizar)
+                    .addComponent(btnParar))
+                .addGap(66, 66, 66))
         );
 
         pack();
@@ -214,6 +229,7 @@ public class VistaCliente extends javax.swing.JFrame {
             socket.close();
             modelo = UsuarioData.llenarArchivos(login.nombre);
             jList1.setModel(modelo);
+
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -264,6 +280,8 @@ public class VistaCliente extends javax.swing.JFrame {
             bis.close();
             bos.close();
             socket.close();
+            modelo = UsuarioData.llenarArchivos(login.nombre);
+            jList1.setModel(modelo);
         } catch (Exception e) {
             System.out.println(e.toString());
         }
@@ -300,15 +318,27 @@ public class VistaCliente extends javax.swing.JFrame {
     }//GEN-LAST:event_btnServidorActionPerformed
 
     private void btnActualizarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActualizarActionPerformed
-        EjemplosVarios varios = new EjemplosVarios();
-        try {
-            varios.enviarEjemplos(login.nombre);
-
-        } catch (IOException ex) {
-            Logger.getLogger(VistaCliente.class
-                    .getName()).log(Level.SEVERE, null, ex);
+        iniciarHilo();
+        if (seguirHilo) {
+            pararHilo(false);
+        } else {
+            pararHilo(true);
         }
     }//GEN-LAST:event_btnActualizarActionPerformed
+
+    public void iniciarHilo() {
+        hilo = new Thread(this);
+        hilo.start();
+        hiloIniciado = true;
+    }
+
+    /*método para parar el hilo*/
+    public void pararHilo(boolean estado) {
+        seguirHilo = estado;
+    }
+    private void btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPararActionPerformed
+        System.exit(0);
+    }//GEN-LAST:event_btnPararActionPerformed
 
     /**
      * @param args the command line arguments
@@ -353,8 +383,28 @@ public class VistaCliente extends javax.swing.JFrame {
         });
     }
 
+    @Override
+    public void run() {
+        EjemplosVarios varios = new EjemplosVarios();
+
+        while (seguirHilo) {
+            System.out.println(cont + " :Hola mundo desde java usando hilos");
+            cont++;
+            try {
+                varios.enviarEjemplos(login.nombre);
+            } catch (IOException ex) {
+                Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException ex) {
+                Logger.getLogger(Principal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
+    private javax.swing.JButton btnParar;
     private javax.swing.JButton btnServidor;
     private javax.swing.JButton btnSubir;
     private javax.swing.JButton btnV;

@@ -5,6 +5,7 @@
  */
 package server;
 
+import data.EjemplosVarios;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -13,16 +14,18 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 
 public class ServerThread implements Runnable {
 
     private ServerSocket server = null;
+    private EjemplosVarios ejemplosVarios;
 
     public ServerThread(int puerto) throws IOException {
-
+        ejemplosVarios = new EjemplosVarios();
         server = new ServerSocket(puerto);
-
         System.out.println("Esperando recepcion de archivos...");
     }
 
@@ -70,7 +73,7 @@ public class ServerThread implements Runnable {
                 }
                 if (type == 'B') {
 
-                    String dirPath = "c:\\Users\\jcast\\Documents\\";
+                    String dirPath = "c:\\redes\\";
                     String nombre = dis.readUTF();
                     int filesCount = dis.readInt();
                     dirPath += nombre + "\\";
@@ -105,6 +108,7 @@ public class ServerThread implements Runnable {
 
     @Override
     public void run() {
-        //
+
     }
+
 }

@@ -12,20 +12,8 @@ public class FTPServer {
         Login login = new Login();
         login.setVisible(true);
 
-        //FileInputStream fis = new FileInputStream();
-        //UsuarioData data = new UsuarioData();
-        //data.copiarAchivos("Antonio", "", "");
         EjemplosVarios varios = new EjemplosVarios();
-        //String guarda = varios.cifrar("Key", "1234");
-        //System.out.println("encriptado texto:" + varios.cifrar("Key", "juan12") + ",fin");
-        //System.out.println("desencriptado texto: " + varios.descifrar("Key", guarda));
-        //varios.enviarEjemplos("Antonio");
-        //varios.recibirAhi();
-        //String secretKey = "jonathancastro.com";
-        //varios.encryptedFile(secretKey, "C:\\redes\\Jonnsn.sql", "C:\\redes\\Jonnsn.enc");
-        //System.out.println("encriptado");
-        //varios.decryptedFile(secretKey, "C:\\redes\\Jonnsn.enc", "C:\\redes\\Jonnsn.sql");
-        //System.out.println("desencriptado");
+
     }
 
 }
