@@ -5,7 +5,9 @@
  */
 package server;
 
+import com.sun.org.apache.xml.internal.security.utils.Base64;
 import data.EjemplosVarios;
+import data.Prieba;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -14,14 +16,20 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
 
 public class ServerThread implements Runnable {
 
     private ServerSocket server = null;
     private EjemplosVarios ejemplosVarios;
+    private static Key key;
 
     public ServerThread(int puerto) throws IOException {
         ejemplosVarios = new EjemplosVarios();
@@ -30,6 +38,7 @@ public class ServerThread implements Runnable {
     }
 
     public void iniciarServidor() throws InterruptedException {
+        Prieba pr = new Prieba();
         while (true) {
 
             try {
@@ -43,6 +52,9 @@ public class ServerThread implements Runnable {
                 // Obtenemos el nombre del archivo
                 char type = dis.readChar();
                 if (type == 'A') {
+                    iniciarEncriptacion();
+                    Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+                    cipher.init(Cipher.DECRYPT_MODE, key);
                     String nombreArchivo = dis.readUTF();
                     System.out.println("ver " + nombreArchivo.toString());
                     int tam = dis.readInt();
@@ -60,7 +72,11 @@ public class ServerThread implements Runnable {
                     for (int i = 0; i < buff.length; i++) {
                         buff[i] = (byte) in.read();
                     }
-                    out.write(buff);
+                    String valoresEncriptados = Base64.encode(buff);
+                    byte[] bytesEn = Base64.decode(valoresEncriptados.replace("\n", ""));
+                    byte[] des = cipher.doFinal(bytesEn);
+                    //buff = pr.decrypt(str, "boooooooooom!!!!").getBytes("UTF-8");
+                    out.write(des);
 
                     // Cerramos flujos
                     out.flush();
@@ -111,4 +127,13 @@ public class ServerThread implements Runnable {
 
     }
 
+    public void iniciarEncriptacion() throws NoSuchAlgorithmException {
+        KeyGenerator generator = KeyGenerator.getInstance("AES");
+
+        generator.init(128);
+        key = generator.generateKey();
+        //obtiene los bytes del 0 a 15
+        key = new SecretKeySpec("redes2JonatMaria".getBytes(), 0, 16, "AES");
+
+    }
 }

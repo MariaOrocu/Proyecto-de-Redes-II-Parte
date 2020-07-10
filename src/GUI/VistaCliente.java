@@ -8,7 +8,15 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import data.EjemplosVarios;
+
+import data.Prieba;
+import java.nio.file.Files;
+import java.security.Key;
+import java.security.NoSuchAlgorithmException;
 import java.security.Principal;
+import javax.crypto.Cipher;
+import javax.crypto.KeyGenerator;
+import javax.crypto.spec.SecretKeySpec;
 import server.Server;
 
 public class VistaCliente extends javax.swing.JFrame implements Runnable {
@@ -22,6 +30,7 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
     boolean hiloIniciado = false;
     Thread hilo;
     int cont = 0;
+    private static Key key;
 
     /**
      * Creates new form VistaCliente
@@ -185,7 +194,8 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
     public void enviarACarpeta(String nombreArchivo, String nombre) {
 
         try {
-
+            Prieba pr = new Prieba();
+            EjemplosVarios varios = new EjemplosVarios();
             InetAddress ip = InetAddress.getByName(txtIp.getText());
             //txtIp.setText(ip.getHostAddress());
             // Creamos el Socket con la direccion y elpuerto de comunicacion
@@ -195,8 +205,10 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
 
             System.out.println("yu " + nombreArchivo);
             File file = new File(nombreArchivo);
-
-            int tamañoArchivo = (int) file.length();
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] bytes = cipher.doFinal(Files.readAllBytes(file.toPath()));
+            int tamañoArchivo = (int) bytes.length;
 
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
@@ -207,25 +219,25 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
             dos.writeUTF(nombre);
             dos.writeInt(tamañoArchivo);
             dos.writeUTF(login.nombre);
-            System.out.println("Enviando Archivo: " + tamañoArchivo);
+            //System.out.println("Enviando Archivo: " + tamañoArchivo);
 
             FileInputStream fis = new FileInputStream(nombreArchivo);
             BufferedInputStream bis = new BufferedInputStream(fis);
             BufferedOutputStream bos = new BufferedOutputStream(socket.getOutputStream());
-
             // Creamos un array de tipo byte con el tamaño del archivo
             byte[] buffer = new byte[tamañoArchivo];
 
             bis.read(buffer);
 
             // Realizamos el envio de los bytes que conforman el archivo
-            for (int i = 0; i < buffer.length; i++) {
-                bos.write(buffer[i]);
-            }
+            for (int i = 0; i < bytes.length; i++) {
 
+                bos.write(bytes[i]);
+            }
             System.out.println("Archivo Enviado: " + file.getName());
             bis.close();
             bos.close();
+            dos.close();
             socket.close();
             modelo = UsuarioData.llenarArchivos(login.nombre);
             jList1.setModel(modelo);
@@ -248,8 +260,10 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
             socket.setKeepAlive(true);
 
             File file = new File(nombreArchivo);
-
-            int tamañoArchivo = (int) file.length();
+            Cipher cipher = Cipher.getInstance("AES/ECB/PKCS5Padding");
+            cipher.init(Cipher.ENCRYPT_MODE, key);
+            byte[] bytes = cipher.doFinal(Files.readAllBytes(file.toPath()));
+            int tamañoArchivo = (int) bytes.length;
 
             DataOutputStream dos = new DataOutputStream(socket.getOutputStream());
 
@@ -272,8 +286,8 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
             bis.read(buffer);
 
             // Realizamos el envio de los bytes que conforman el archivo
-            for (int i = 0; i < buffer.length; i++) {
-                bos.write(buffer[i]);
+            for (int i = 0; i < bytes.length; i++) {
+                bos.write(bytes[i]);
             }
 
             System.out.println("Archivo Enviado: " + file.getName());
@@ -295,6 +309,11 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
 
             File archivoElegido = fChooser.getSelectedFile();
             System.out.println(archivoElegido.getAbsolutePath() + "&" + archivoElegido.getName());
+            try {
+                iniciarEncriptacion();
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
             enviarACarpeta(archivoElegido.getAbsolutePath(), archivoElegido.getName());
     }//GEN-LAST:event_btnSubirActionPerformed
     }
@@ -313,6 +332,11 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
 
             File archivoElegido = fChooser.getSelectedFile();
             System.out.println(archivoElegido.getAbsolutePath() + "&" + archivoElegido.getName());
+            try {
+                iniciarEncriptacion();
+            } catch (NoSuchAlgorithmException ex) {
+                Logger.getLogger(VistaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
             enviarAServidor(archivoElegido.getAbsolutePath(), archivoElegido.getName());
         }
     }//GEN-LAST:event_btnServidorActionPerformed
@@ -330,6 +354,16 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
         hilo = new Thread(this);
         hilo.start();
         hiloIniciado = true;
+    }
+
+    public void iniciarEncriptacion() throws NoSuchAlgorithmException {
+        KeyGenerator generator = KeyGenerator.getInstance("AES");
+
+        generator.init(128);
+        key = generator.generateKey();
+        //obtiene los bytes del 0 a 15
+        key = new SecretKeySpec("redes2JonatMaria".getBytes(), 0, 16, "AES");
+
     }
 
     /*método para parar el hilo*/
@@ -388,7 +422,7 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
         EjemplosVarios varios = new EjemplosVarios();
 
         while (seguirHilo) {
-            System.out.println(cont + " :Hola mundo desde java usando hilos");
+            //System.out.println(cont + " :Hola mundo desde java usando hilos");
             cont++;
             try {
                 varios.enviarEjemplos(login.nombre);

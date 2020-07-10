@@ -11,9 +11,13 @@ public class FTPServer {
     public static void main(String[] args) throws Exception {
         Login login = new Login();
         login.setVisible(true);
-
-        EjemplosVarios varios = new EjemplosVarios();
-
+        byte a = new Byte("1");
+        //System.out.println(a);
+        /*EjemplosVarios varios = new EjemplosVarios();
+        System.out.println(varios.cifrar("Key", String.valueOf(a)));
+        String enc = varios.cifrar("Key", String.valueOf(a));
+        System.out.println("des " + varios.descifrar("Key", enc));
+         */
     }
 
 }
