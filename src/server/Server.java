@@ -1,9 +1,6 @@
 package server;
 
-import GUI.EnviarArchivos;
-import java.net.*;
 import java.io.*;
-import java.util.*;
 
 public class Server {
 

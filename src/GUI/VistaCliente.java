@@ -367,7 +367,7 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
         seguirHilo = estado;
     }
     private void btnPararActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPararActionPerformed
-        System.exit(0);
+        pararHilo(false);
     }//GEN-LAST:event_btnPararActionPerformed
 
     /**

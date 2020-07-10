@@ -23,10 +23,6 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.management.openmbean.InvalidKeyException;
 import org.apache.commons.codec.binary.Base64;
 
-/**
- *
- *
- */
 public class EjemplosVarios {
 
     String secretKey = "Key";
