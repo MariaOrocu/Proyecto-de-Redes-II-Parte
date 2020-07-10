@@ -7,7 +7,6 @@ package server;
 
 import com.sun.org.apache.xml.internal.security.utils.Base64;
 import data.EjemplosVarios;
-import data.Prieba;
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
 import java.io.DataInputStream;
@@ -18,12 +17,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
-import javax.swing.JOptionPane;
 
 public class ServerThread implements Runnable {
 
@@ -38,7 +34,6 @@ public class ServerThread implements Runnable {
     }
 
     public void iniciarServidor() throws InterruptedException {
-        Prieba pr = new Prieba();
         while (true) {
 
             try {

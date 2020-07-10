@@ -8,8 +8,6 @@ import java.util.logging.Logger;
 import javax.swing.DefaultListModel;
 import javax.swing.JFileChooser;
 import data.EjemplosVarios;
-
-import data.Prieba;
 import java.nio.file.Files;
 import java.security.Key;
 import java.security.NoSuchAlgorithmException;
@@ -17,7 +15,6 @@ import java.security.Principal;
 import javax.crypto.Cipher;
 import javax.crypto.KeyGenerator;
 import javax.crypto.spec.SecretKeySpec;
-import server.Server;
 
 public class VistaCliente extends javax.swing.JFrame implements Runnable {
 
@@ -194,7 +191,6 @@ public class VistaCliente extends javax.swing.JFrame implements Runnable {
     public void enviarACarpeta(String nombreArchivo, String nombre) {
 
         try {
-            Prieba pr = new Prieba();
             EjemplosVarios varios = new EjemplosVarios();
             InetAddress ip = InetAddress.getByName(txtIp.getText());
             //txtIp.setText(ip.getHostAddress());
